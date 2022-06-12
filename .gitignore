@@ -1,0 +1,6 @@
+.idea
+buf.lock
+
+proto/gateway
+proto/sma
+docs

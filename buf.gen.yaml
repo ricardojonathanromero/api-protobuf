@@ -1,0 +1,29 @@
+version: v1
+plugins:
+
+  # generate go structs for protocol buffer definition
+  - name: go
+    out: proto/sma
+    opt:
+      - paths=source_relative
+
+  # generate gRPC stubs in golang
+  - name: go-grpc
+    out: proto/sma
+    opt:
+      - paths=source_relative
+
+  # generate reverse proxy from protocol definitions
+  - name: grpc-gateway
+    out: proto/gateway
+    opt:
+      - paths=source_relative
+      - grpc_api_configuration=proto/definition/posts_annotations.yml
+      - standalone=true
+
+  # generate swagger documentation from protocol definitions
+  - name: openapiv2
+    out: docs
+    opt:
+      - logtostderr=true
+      - grpc_api_configuration=proto/definition/posts_annotations.yml

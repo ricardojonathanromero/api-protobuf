@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  db:
+    image: mongo
+    container_name: db
+    expose:
+      - 27017
+    volumes:
+      - db-vol:/data/db
+    networks:
+      - app-net
+
+  app:
+    container_name: app
+    depends_on:
+      - db
+    build:
+      context: .
+      args:
+        ENABLE_PROXY: ${ENABLE_PROXY:-true}
+        PROXY_ADDR: ${PROXY_ADDR:-8080}
+        GRPC_ADDR: ${GRPC_ADDR:-8090}
+    image: app
+    ports:
+      - "8080:8080"
+    networks:
+      - app-net
+    environment:
+      ENV: ${ENV:-test}
+      MONGO_URI: mongodb://db:27017
+
+volumes:
+  db-vol:
+
+networks:
+  app-net:
