@@ -48,21 +48,25 @@ spec:
           livenessProbe:
             httpGet:
               port: 8080
-              path: /health
+              path: /health_tz
               scheme: HTTP
               host: localhost
             initialDelaySeconds: 20
             periodSeconds: 15
             timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
           readinessProbe:
             httpGet:
               port: 8080
-              path: /health
+              path: /health_rz
               scheme: HTTP
               host: localhost
             initialDelaySeconds: 20
             periodSeconds: 15
             timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
 
 ---
 
