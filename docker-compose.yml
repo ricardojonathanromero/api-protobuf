@@ -16,10 +16,6 @@ services:
       - db
     build:
       context: .
-      args:
-        ENABLE_PROXY: ${ENABLE_PROXY:-true}
-        PROXY_ADDR: ${PROXY_ADDR:-8080}
-        GRPC_ADDR: ${GRPC_ADDR:-8090}
     image: app
     ports:
       - "8080:8080"
@@ -28,6 +24,15 @@ services:
     environment:
       ENV: ${ENV:-test}
       MONGO_URI: mongodb://db:27017
+    entrypoint: [ "./protobuf-app", "-enable_proxy=true", "-http_addr=:8080", "-grpc_addr=:8090" ]
+    privileged: false
+    restart: unless-stopped
+    healthcheck:
+      test: curl --fail http://localhost:8080/health || exit 1
+      interval: 15s
+      retries: 3
+      start_period: 20s
+      timeout: 5s
 
 volumes:
   db-vol:

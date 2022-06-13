@@ -27,11 +27,10 @@ MAINTAINER "ricardo.jonathan.romero@gmail.com"
 LABEL service="protobuf-app"
 LABEL owner="ricardojonathanromero"
 
-RUN apk --no-cache add ca-certificates tzdata
+RUN apk --no-cache add ca-certificates tzdata curl
 WORKDIR /app
 RUN adduser -S noroot
 COPY --from=builder /app/protobuf-app .
 COPY --from=builder /app/docs ./docs
 RUN chown noroot protobuf-app && chmod +x protobuf-app
 USER noroot
-ENTRYPOINT ["/app/protobuf-app", "-enable_proxy=true", "-http_addr=:8080", "-grpc_addr=:8090"]

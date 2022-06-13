@@ -19,3 +19,11 @@ compile:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o protobuf-app cmd/main.go
 
 release: binaries protobuf compile
+
+kube-release:
+	kubectl apply -f scripts/mongo-deployment.yml
+	kubectl apply -f deployment.yml
+
+kube-remove:
+	kubectl delete -f scripts/mongo-deployment.yml
+	kubectl delete -f deployment.yml

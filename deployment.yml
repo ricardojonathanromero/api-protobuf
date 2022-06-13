@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-app
+  namespace: backend
+  labels:
+    app: posts
+    tier: infrastructure
+    version: v1
+spec:
+  selector:
+    matchLabels:
+      app: posts
+      tier: infrastructure
+      version: v1
+  template:
+    metadata:
+      name: post-app
+      namespace: backend
+      labels:
+        app: posts
+        tier: infrastructure
+        version: v1
+    spec:
+      containers:
+        - name: app
+          image: app
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              hostPort: 8080
+              name: http-port
+            - containerPort: 8090
+              hostPort: 8090
+              name: grpc-port
+          env:
+            - name: ENV
+              value: ${ENV:-test}
+            - name: MONGO_URI
+              value: mongodb://db:27017
+          command: [ "/app/protobuf-app", "-enable_proxy=true", "-http_addr=:8080", "-grpc_addr=:8090" ]
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1002
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+              scheme: HTTP
+              host: localhost
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+              scheme: HTTP
+              host: localhost
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 5
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: posts
+    tier: infrastructure
+    version: v1
+  name: posts-app
+  namespace: backend
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      name: http-port
+      targetPort: 8080
+      protocol: TCP
+    - port: 8090
+      name: grpc-port
+      targetPort: 8090
+      protocol: TCP
+  selector:
+    app: posts
+    tier: infrastructure
+    version: v1
