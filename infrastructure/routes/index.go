@@ -86,10 +86,7 @@ func (r *router) ProxyServer(gRPCAddr, httpAddr string) error {
 	server.Group("v1/*{grpc_gateway}").Any("", gin.WrapH(mux))
 
 	// configure health
-	server.GET("/health_tz", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "ok"})
-	})
-	server.GET("/health_rz", func(c *gin.Context) {
+	server.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "ok"})
 	})
 

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/ricardojonathanromero/api-protobuf/proto/sma"
 	log "github.com/sirupsen/logrus"
@@ -15,7 +16,7 @@ func (h *handler) DeletePost(_ context.Context, req *sma.PostIdReq) (*sma.PostDe
 	id, err := primitive.ObjectIDFromHex(req.PostId)
 	if err != nil {
 		log.Errorf("id %s is not valid. reason\n%v", req.PostId, err)
-		return res, err
+		return res, errors.New("'post_id' field is required")
 	}
 
 	err = h.srv.RemovePost(id)

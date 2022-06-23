@@ -48,7 +48,7 @@ spec:
           livenessProbe:
             httpGet:
               port: 8080
-              path: /health_tz
+              path: /health
               scheme: HTTP
               host: localhost
             initialDelaySeconds: 20
@@ -59,7 +59,7 @@ spec:
           readinessProbe:
             httpGet:
               port: 8080
-              path: /health_rz
+              path: /health
               scheme: HTTP
               host: localhost
             initialDelaySeconds: 20

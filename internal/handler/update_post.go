@@ -20,16 +20,17 @@ func (h *handler) UpdatePost(_ context.Context, req *sma.UpdatePostReq) (*sma.Po
 
 	err = h.srv.UpdatePost(id, req.Post)
 	if err != nil {
-		log.Error("error updating post")
+		log.Errorf("error updating post. %v", err)
 		return res, err
 	}
 
 	log.Info("looking for new document updated")
 	post, err := h.srv.RetrievePost(id)
 	if err != nil {
-		log.Errorf("id %s not founded", id)
+		log.Errorf("id %s not founded. %v", id, err)
 		return res, err
 	}
 
+	log.Info("document founded")
 	return post, nil
 }

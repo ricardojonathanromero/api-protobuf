@@ -20,7 +20,7 @@ func (h *handler) CreatePost(_ context.Context, req *sma.CreatePostReq) (*sma.Po
 	}
 
 	if len(req.Description) == 0 {
-		return nil, errors.New("'description' filed is required")
+		return nil, errors.New("'description' field is required")
 	}
 
 	log.Info("all works fine, next step will be executed")

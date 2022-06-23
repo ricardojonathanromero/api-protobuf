@@ -2,7 +2,7 @@ package handler
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"github.com/ricardojonathanromero/api-protobuf/proto/sma"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -15,7 +15,7 @@ func (h *handler) ShowPost(_ context.Context, req *sma.PostIdReq) (*sma.Post, er
 	id, err := primitive.ObjectIDFromHex(req.PostId)
 	if err != nil {
 		log.Errorf("error invalid post if %s", req.PostId)
-		return res, fmt.Errorf("invalid post id. %v", err)
+		return res, errors.New("'post_id' is not valid")
 	}
 
 	res, err = h.srv.RetrievePost(id)

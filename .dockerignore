@@ -1,3 +1,10 @@
+## directories
 docs
 proto/gateway
 proto/sma
+reports
+scripts
+
+## files
+deployment.yml
+README.md
