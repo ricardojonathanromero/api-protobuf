@@ -21,5 +21,5 @@ This will create two container. The containers created are exposed below:
 ## TODO
 
 - [x] Swagger documentation
-- [ ] Tests
-- [ ] Documentation (README)
+- [ ] Tests (WIP)
+- [ ] Documentation (WIP)
