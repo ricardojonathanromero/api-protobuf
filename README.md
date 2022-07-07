@@ -13,6 +13,7 @@ command `docker compose .`
 This will create two container. The containers created are exposed below:
 
 `mongo` - creates a mongo container that is used to persist all data. This container expose port `27017`
+
 `app` - creates the application and expose the following ports:
 
     8080 - http server
