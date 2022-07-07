@@ -9,6 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Setup go env
+        run: |
+          go env -w GO111MODULE=on
+
       - name: Set up Go
         uses: actions/setup-go/@v3
         with:
@@ -16,12 +20,22 @@ jobs:
 
       - name: Dependencies
         run: |
-          go install github.com/jstemmer/go-junit-report/v2@latest
-          go install github.com/axw/gocov/gocov@latest
-          go install github.com/AlekSi/gocov-xml@latest
+          make dependencies
 
       - name: Tests
         run: |
           go test -v -coverprofile=coverage.out ./... | tee test.out
-          cat test.out | go-junit-report > report.xml
-          gocov convert coverage.out | gocov-xml > coverage-report.xml
+          cat test.out | go-junit-report > ./coverage/reports/report.xml
+          gocov convert coverage.out | gocov-xml > ./coverage/reports/coverage-report.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage/reports/
+          fail_ci_if_error: true
+          files: ./report.xml,./coverage-report.xml
+          flags: unittests
+          name: codecov-umbrella
+          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true
