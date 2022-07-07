@@ -19,12 +19,12 @@ dependencies:
         		-o "/usr/local/bin/buf" && \
         		chmod +x "/usr/local/bin/buf"
 	go get -d google.golang.org/grpc/cmd/protoc-gen-go-grpc && \
-		go install \
-			github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
-			github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
-			google.golang.org/protobuf/cmd/protoc-gen-go \
-			google.golang.org/grpc/cmd/protoc-gen-go-grpc \
-			github.com/jstemmer/go-junit-report/v2@latest \
-			github.com/axw/gocov/gocov@latest \
-			github.com/AlekSi/gocov-xml@latest
+	go install \
+		github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
+		github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
+		google.golang.org/protobuf/cmd/protoc-gen-go \
+		google.golang.org/grpc/cmd/protoc-gen-go-grpc && \
+  	go install github.com/jstemmer/go-junit-report/v2@latest \
+  		github.com/axw/gocov/gocov@latest \
+  		github.com/AlekSi/gocov-xml@latest
 	mkdir coverage/reports
