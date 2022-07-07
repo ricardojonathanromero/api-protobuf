@@ -22,6 +22,11 @@ jobs:
         run: |
           make dependencies
 
+      - name: Build
+        run: |
+          buf generate
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o protobuf-app cmd/main.go
+
       - name: Tests
         run: |
           go test -v -coverprofile=coverage.out ./... | tee test.out
