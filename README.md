@@ -1,5 +1,6 @@
 # api-protobuf
 [![codecov](https://codecov.io/gh/ricardojonathanromero/api-protobuf/branch/main/graph/badge.svg?token=9L7JY2U765)](https://codecov.io/gh/ricardojonathanromero/api-protobuf)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ricardojonathanromero_api-protobuf&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ricardojonathanromero_api-protobuf)
 
 ## considerations
 
