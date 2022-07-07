@@ -1,4 +1,5 @@
 # api-protobuf
+[![codecov](https://codecov.io/gh/ricardojonathanromero/api-protobuf/branch/main/graph/badge.svg?token=9L7JY2U765)](https://codecov.io/gh/ricardojonathanromero/api-protobuf)
 
 ## considerations
 
