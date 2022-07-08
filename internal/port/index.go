@@ -7,9 +7,10 @@ import (
 )
 
 type IRepository interface {
+	CountDocuments(input *sma.ListPostsReq) (int64, error)
 	DeleteDocumentByID(id primitive.ObjectID) error
 	FindDocumentByID(id primitive.ObjectID) (*models.Post, error)
-	FindDocuments(input *sma.ListPostsReq) (*models.PostList, error)
+	FindDocuments(input *sma.ListPostsReq) ([]*models.Post, error)
 	InsertDocument(doc interface{}) (primitive.ObjectID, error)
 	UpdateDocumentByID(id primitive.ObjectID, doc interface{}) error
 }

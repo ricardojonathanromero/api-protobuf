@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"github.com/ricardojonathanromero/api-protobuf/infrastructure/db"
 	"github.com/ricardojonathanromero/api-protobuf/internal/domain/models"
 	"github.com/ricardojonathanromero/api-protobuf/internal/port"
@@ -24,6 +25,24 @@ const (
 	collection string = "posts"
 )
 
+func (repo *repository) CountDocuments(input *sma.ListPostsReq) (int64, error) {
+	col, err := repo.collection()
+	if err != nil {
+		return 0, err
+	}
+
+	ctx, cancel := utils.ContextWithTimeout(deadline)
+	defer cancel()
+
+	filter := bson.D{{"user_id", input.UserId}}
+
+	if input.Filter > 0 {
+		filter = append(filter, bson.E{Key: "status", Value: input.Filter})
+	}
+
+	return col.CountDocuments(ctx, filter)
+}
+
 // DeleteDocumentByID removes document from db using id/*
 func (repo *repository) DeleteDocumentByID(id primitive.ObjectID) error {
 	// removing document from db
@@ -37,7 +56,7 @@ func (repo *repository) DeleteDocumentByID(id primitive.ObjectID) error {
 
 	res, err := col.DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
-		return err
+		return errors.New("mongo: document not deleted")
 	}
 
 	if res.DeletedCount <= 0 {
@@ -60,14 +79,16 @@ func (repo *repository) FindDocumentByID(id primitive.ObjectID) (*models.Post, e
 	defer cancel()
 
 	err = col.FindOne(ctx, bson.M{"_id": id}).Decode(&result)
+	if err != nil {
+		return result, errors.New("document not found")
+	}
 
-	return result, err
+	return result, nil
 }
 
 // FindDocuments finds documents/*
-func (repo *repository) FindDocuments(input *sma.ListPostsReq) (*models.PostList, error) {
-	var result *models.PostList
-	var documents []*models.Post
+func (repo *repository) FindDocuments(input *sma.ListPostsReq) ([]*models.Post, error) {
+	result := make([]*models.Post, 0)
 
 	col, err := repo.collection()
 	if err != nil {
@@ -87,32 +108,13 @@ func (repo *repository) FindDocuments(input *sma.ListPostsReq) (*models.PostList
 		filter = append(filter, bson.E{Key: "status", Value: input.Filter})
 	}
 
-	// count documents
-	total, err := col.CountDocuments(ctx, filter)
-	if err != nil {
-		return result, err
-	}
-
 	// find documents
 	cursor, err := col.Find(ctx, filter, opts)
 	if err != nil {
-		return result, err
+		return result, errors.New("no documents found")
 	}
 
-	err = cursor.All(ctx, &documents)
-	if err != nil {
-		return result, err
-	}
-
-	// calculate page, total page, total items
-	result = new(models.PostList)
-	result.Posts = make([]*models.Post, 0)
-
-	// generating page info
-	result.Count = total
-
-	// adding items result
-	result.Posts = documents
+	_ = cursor.All(ctx, &result)
 
 	return result, nil
 }
@@ -132,7 +134,7 @@ func (repo *repository) InsertDocument(doc interface{}) (primitive.ObjectID, err
 	// inserting document received
 	res, err := col.InsertOne(ctx, doc)
 	if err != nil {
-		return primitive.NilObjectID, err
+		return primitive.NilObjectID, errors.New("document not saved")
 	}
 
 	// returning primitive id doing cast to result
@@ -151,10 +153,10 @@ func (repo *repository) UpdateDocumentByID(id primitive.ObjectID, doc interface{
 
 	res, err := col.UpdateByID(ctx, id, bson.M{"$set": doc})
 	if err != nil {
-		return err
+		return errors.New("mongo: document not updated")
 	}
 
-	if res.ModifiedCount <= 0 || res.MatchedCount <= 0 {
+	if res.ModifiedCount <= 0 && res.MatchedCount <= 0 {
 		return mongo.ErrNoDocuments
 	}
 
