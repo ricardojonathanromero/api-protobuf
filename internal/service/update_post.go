@@ -9,11 +9,13 @@ import (
 
 func (s *service) UpdatePost(id primitive.ObjectID, in *sma.UpdatePost) error {
 	log.Infof("updating post %s", id.Hex())
+	now := s.ut.Now()
 
 	document := &models.Post{
 		Title:       in.Title,
 		Description: in.Description,
 		MediaIDs:    in.MediaIds,
+		UpdatedAt:   now,
 	}
 
 	log.Info("updating document")

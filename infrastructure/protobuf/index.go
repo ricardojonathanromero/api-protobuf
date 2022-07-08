@@ -6,6 +6,7 @@ import (
 	"github.com/ricardojonathanromero/api-protobuf/internal/repository"
 	"github.com/ricardojonathanromero/api-protobuf/internal/service"
 	"github.com/ricardojonathanromero/api-protobuf/proto/sma"
+	"github.com/ricardojonathanromero/api-protobuf/utils"
 	"google.golang.org/grpc"
 	"net"
 )
@@ -24,7 +25,8 @@ func (pb *protobuf) Server(gRPCAddr string, dbInstance db.IDB) error {
 
 	// creating handlers
 	repo := repository.New(dbInstance)
-	serv := service.New(repo)
+	u := utils.New()
+	serv := service.New(repo, u)
 
 	// register the GreeterServerImpl on the gRPC server
 	sma.RegisterPostsServer(srv, handler.New(serv))

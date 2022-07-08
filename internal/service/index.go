@@ -9,6 +9,7 @@ import (
 
 type service struct {
 	repo port.IRepository
+	ut   port.IUtils
 }
 
 var _ port.IService = (*service)(nil)
@@ -56,6 +57,6 @@ func calculateTotalPages(total, perPage int64) uint64 {
 	return uint64(pages)
 }
 
-func New(repo port.IRepository) port.IService {
-	return &service{repo: repo}
+func New(repo port.IRepository, ut port.IUtils) port.IService {
+	return &service{repo: repo, ut: ut}
 }

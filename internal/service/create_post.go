@@ -5,14 +5,13 @@ import (
 	"github.com/ricardojonathanromero/api-protobuf/proto/sma"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"time"
 )
 
 // CreatePost generates new post document to insert into db
 func (s *service) CreatePost(in *sma.CreatePostReq) (*sma.Post, error) {
 	log.Info("start createPost service")
 
-	now := time.Now()
+	now := s.ut.Now()
 
 	log.Info("activating post")
 	document := &models.Post{
@@ -21,8 +20,8 @@ func (s *service) CreatePost(in *sma.CreatePostReq) (*sma.Post, error) {
 		UserID:      in.UserId,
 		MediaIDs:    in.MediaIds,
 		Status:      sma.PostStatus_POST_STATUS_ACTIVE.String(),
-		CreatedAt:   &now,
-		UpdatedAt:   &now,
+		CreatedAt:   now,
+		UpdatedAt:   now,
 	}
 
 	id, err := s.repo.InsertDocument(document)
@@ -38,8 +37,8 @@ func (s *service) CreatePost(in *sma.CreatePostReq) (*sma.Post, error) {
 		Description: document.Description,
 		UserId:      document.UserID,
 		Status:      sma.PostStatus_POST_STATUS_ACTIVE,
-		CreatedAt:   timestamppb.New(now),
-		UpdatedAt:   timestamppb.New(now),
+		CreatedAt:   timestamppb.New(*now),
+		UpdatedAt:   timestamppb.New(*now),
 	}
 	return result, nil
 }

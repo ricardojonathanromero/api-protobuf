@@ -4,6 +4,7 @@ import (
 	"github.com/ricardojonathanromero/api-protobuf/internal/domain/models"
 	"github.com/ricardojonathanromero/api-protobuf/proto/sma"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type IRepository interface {
@@ -21,4 +22,8 @@ type IService interface {
 	RemovePost(id primitive.ObjectID) error
 	RetrievePost(id primitive.ObjectID) (*sma.Post, error)
 	UpdatePost(id primitive.ObjectID, in *sma.UpdatePost) error
+}
+
+type IUtils interface {
+	Now() *time.Time
 }
