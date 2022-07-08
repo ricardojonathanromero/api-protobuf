@@ -63,6 +63,44 @@ func TestService_ListPosts(t *testing.T) {
 			},
 		},
 		{
+			title: "happy_path_unspecified",
+			input: &sma.ListPostsReq{
+				UserId:  "1",
+				Page:    1,
+				PerPage: 10,
+			},
+			countRes: 1,
+			findRes: []*models.Post{{
+				ID:          id,
+				Title:       "success",
+				Description: "success",
+				UserID:      "1",
+				MediaIDs:    []string{"hello"},
+				Status:      "unspecified",
+				CreatedAt:   &now,
+				UpdatedAt:   &now,
+			}},
+			expected: &sma.ListPostsResp{
+				Posts: []*sma.Post{
+					{
+						Id:          id.Hex(),
+						Title:       "success",
+						Description: "success",
+						UserId:      "1",
+						Status:      sma.PostStatus_POST_STATUS_UNSPECIFIED,
+						CreatedAt:   timestamppb.New(now),
+						UpdatedAt:   timestamppb.New(now),
+					},
+				},
+				PageInfo: &sma.PageInfo{
+					Page:       1,
+					PageSize:   10,
+					TotalItems: 1,
+					TotalPages: 1,
+				},
+			},
+		},
+		{
 			title: "happy_path_pagination",
 			input: &sma.ListPostsReq{
 				UserId:  "1",
