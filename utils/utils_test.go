@@ -77,3 +77,15 @@ func TestContextWithTimeout(t *testing.T) {
 		})
 	}
 }
+
+func TestTimeNow(t *testing.T) {
+	t.Run("happy_path", func(t *testing.T) {
+		ut := New()
+		now := ut.Now()
+
+		if now == nil {
+			t.Errorf("erro time: %v", now)
+			t.FailNow()
+		}
+	})
+}
