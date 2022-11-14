@@ -25,4 +25,4 @@ This will create two container. The containers created are exposed below:
 
 - [x] Swagger documentation
 - [x] Tests
-- [x] Documentation
+- [ ] Documentation (WIP)
