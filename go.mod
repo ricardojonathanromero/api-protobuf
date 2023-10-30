@@ -1,6 +1,6 @@
 module github.com/ricardojonathanromero/api-protobuf
 
-go 1.17
+go 1.21
 
 require (
 	github.com/gin-contrib/cors v1.3.1
